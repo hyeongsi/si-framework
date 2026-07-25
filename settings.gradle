@@ -1,0 +1,97 @@
+/*
+ * === 어떤 프로젝트와 모듈로 구성할 것인가 ===
+ * 루트 프로젝트 이름 설정
+ * 하위 모듈 등록
+ * 플러그인 저장소 설정
+ * 라이브러리 저장소 정책 설정
+ */
+
+/*
+ * Gradle 플러그인을 어디에서 검색할지 설정한다.
+ *
+ * 이 영역은 일반 라이브러리 의존성이 아니라
+ * org.springframework.boot 같은 "Gradle 플러그인"을 찾을 때 사용된다.
+ */
+pluginManagement {
+
+    /*
+     * Gradle 플러그인 검색 저장소 목록이다.
+     */
+    repositories {
+
+        /*
+         * Gradle 공식 플러그인 저장소다.
+         *
+         * java 플러그인처럼 Gradle에 기본 포함된 플러그인은
+         * 별도 다운로드가 필요 없지만,
+         * 외부 Gradle 플러그인을 사용할 때 이 저장소가 사용된다.
+         */
+        gradlePluginPortal()
+
+        /*
+         * Maven Central 저장소에서도 Gradle 플러그인을 검색하도록 한다.
+         *
+         * 일부 플러그인은 Gradle Plugin Portal뿐 아니라
+         * Maven Central을 통해 제공될 수 있다.
+         */
+        mavenCentral()
+    }
+}
+
+/*
+ * 전체 프로젝트에서 사용하는 일반 라이브러리 의존성 저장소를 관리한다.
+ *
+ * 예:
+ * - JUnit
+ * - Spring Framework
+ * - Spring Boot Starter
+ * - Hibernate
+ * - Jackson
+ */
+dependencyResolutionManagement {
+
+    /*
+     * 하위 모듈의 build.gradle에서 repositories 블록을
+     * 개별적으로 선언하지 못하도록 제한한다.
+     *
+     * 저장소 설정을 루트 settings.gradle 한 곳에서 관리하기 위한 설정이다.
+     *
+     * 하위 모듈에서 다음과 같이 별도 저장소를 선언하면 빌드 오류가 발생한다.
+     *
+     * repositories {
+     *     mavenCentral()
+     * }
+     */
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    /*
+     * 프로젝트의 모든 일반 라이브러리를 검색할 저장소 목록이다.
+     */
+    repositories {
+
+        /*
+         * Java 및 Spring 생태계에서 가장 일반적으로 사용하는
+         * 공개 Maven 저장소다.
+         *
+         * JUnit, Spring, Hibernate 등의 라이브러리를 이곳에서 받는다.
+         */
+        mavenCentral()
+    }
+}
+
+/*
+ * 멀티 모듈 프로젝트의 최상위 프로젝트 이름이다.
+ *
+ * IntelliJ의 Gradle 창과 Gradle 빌드 결과에서
+ * 루트 프로젝트 이름으로 사용된다.
+ */
+rootProject.name = 'si-framework'
+
+/*
+ * si-framework-core 디렉터리를
+ * Gradle 하위 모듈로 등록한다.
+ *
+ * 단순히 디렉터리를 생성하는 것만으로는 Gradle 모듈이 되지 않는다.
+ * settings.gradle에 include 해야 Gradle이 하위 프로젝트로 인식한다.
+ */
+include 'si-framework-core'
