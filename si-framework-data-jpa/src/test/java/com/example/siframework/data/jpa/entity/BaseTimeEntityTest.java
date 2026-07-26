@@ -1,18 +1,19 @@
 package com.example.siframework.data.jpa.entity;
 
+import com.example.siframework.data.jpa.support.AdjustableClock;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
+import java.time.ZoneId;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * BaseTimeEntity의 JPA 감사 동작을 검증한다.
@@ -20,6 +21,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(classes = JpaAuditingTestConfiguration.class)
 @Transactional
 class BaseTimeEntityTest {
+
+    /**
+     * 테스트에서 사용하는 초기 UTC 시각이다.
+     */
+    private static final Instant INITIAL_INSTANT =
+        Instant.parse("2026-01-01T01:00:00Z");
+
+    /**
+     * 테스트에서 사용하는 시간대다.
+     */
+    private static final ZoneId TEST_ZONE =
+        ZoneId.of("Asia/Seoul");
+
 
     /**
      * 테스트 엔티티 저장과 조회에 사용한다.
@@ -33,6 +47,17 @@ class BaseTimeEntityTest {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private AdjustableClock clock;
+
+    /**
+     * 각 테스트가 동일한 시각에서 시작하도록 초기화한다.
+     */
+    @BeforeEach
+    void setUp() {
+        clock.setInstant(INITIAL_INSTANT);
+    }
+
     @Test
     void 엔티티를_저장하면_생성_일시와_수정_일시가_설정된다() {
         //given
@@ -43,11 +68,22 @@ class BaseTimeEntityTest {
         entityManager.flush();
 
         //then
+        LocalDateTime expectedDateTime =
+            LocalDateTime.ofInstant(
+                INITIAL_INSTANT,
+                TEST_ZONE
+            );
+
         assertNotNull(savedEntity.createdAt());
         assertNotNull(savedEntity.modifiedAt());
 
         assertEquals(
-            savedEntity.createdAt(),
+            expectedDateTime,
+            savedEntity.modifiedAt()
+        );
+
+        assertEquals(
+            expectedDateTime,
             savedEntity.modifiedAt()
         );
     }
@@ -67,13 +103,7 @@ class BaseTimeEntityTest {
         LocalDateTime originalCreatedAt = entity.createdAt();
         LocalDateTime originalModifiedAt = entity.modifiedAt();
 
-        /*
-         * 첫 저장과 수정 시각이 동일한 시스템 시각 단위로
-         * 기록되는 상황을 피하기 위한 테스트 대기다.
-         *
-         * 향후 DateTimeProvider를 도입하면 이 대기는 제거한다.
-         */
-        Thread.sleep(10);
+        clock.advance(Duration.ofHours(1));
 
         // 영속성 컨텍스트를 초기화해 DB에서 다시 조회한다.
         entityManager.clear();
@@ -86,13 +116,20 @@ class BaseTimeEntityTest {
         entityManager.flush();
 
         //then
-        /*
-         * H2의 TIMESTAMP 정밀도 지정하지 않으면 기본 6자리
-         * 반면에 LocalDateTime은 9자리라 6자리로 정밀도 조정
-         */
+        LocalDateTime expectedModifiedAt =
+            LocalDateTime.ofInstant(
+                INITIAL_INSTANT.plus(Duration.ofHours(1)),
+                TEST_ZONE
+            );
+
         assertEquals(
-            originalCreatedAt.plusNanos(500).truncatedTo(ChronoUnit.MICROS),
-            foundEntity.createdAt().truncatedTo(ChronoUnit.MICROS)
+            originalCreatedAt,
+            foundEntity.createdAt()
+        );
+
+        assertEquals(
+            expectedModifiedAt,
+            foundEntity.modifiedAt()
         );
 
         assertTrue(
