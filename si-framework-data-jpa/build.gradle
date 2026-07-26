@@ -18,26 +18,17 @@ description = 'SI 공통 프레임워크 JPA 데이터 모듈'
 dependencies {
 
     /*
-     * 프레임워크 핵심 공통 모듈을 사용한다.
+     * data-jpa의 공개 API가 CurrentAuditorProvider 같은
+     * core 타입을 생성자와 메서드 계약에 노출한다.
      *
-     * data-jpa에서 공통 오류 코드와 예외 등의
-     * core 공개 API를 사용할 수 있게 한다.
-     *
-     * implementation을 사용했으므로 data-jpa 내부 구현에서 사용하며,
-     * data-jpa를 사용하는 외부 프로젝트에 core 의존성을
-     * 공개 API로 강제 노출하지 않는다.
+     * data-jpa 사용자가 해당 타입을 컴파일할 수 있도록
+     * core 의존성을 api로 공개한다.
      */
-    implementation project(':si-framework-core')
+    api project(':si-framework-core')
 
     /*
-     * Spring Data JPA 기능을 제공하는 Spring Boot Starter다.
-     *
-     * 대표적으로 다음 의존성을 포함한다.
-     * - Jakarta Persistence API
-     * - Spring Data JPA
-     * - Hibernate ORM
-     * - Spring ORM
-     * - 트랜잭션 지원
+     * JPA 및 Spring Data JPA 타입이 data-jpa의
+     * 공개 API에 사용되므로 소비 프로젝트에 공개한다.
      */
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
 
