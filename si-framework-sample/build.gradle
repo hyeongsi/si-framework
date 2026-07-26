@@ -20,24 +20,33 @@ description = 'SI 공통 프레임워크 사용 예제 애플리케이션'
 dependencies {
 
     /*
-     * 현재 프로젝트의 si-framework-core 모듈을 사용한다.
-     *
-     * sample은 core에 정의된 ErrorCode,
-     * BusinessException, SystemException 등을 사용할 수 있다.
+     * 순수 Java 기반 핵심 프레임워크 기능을 사용한다.
      */
     implementation project(':si-framework-core')
 
     /*
-     * Spring Boot의 핵심 자동 설정과 애플리케이션 실행 기능을 사용한다.
+     * JPA 기반 프레임워크 공통 기능을 사용한다.
      *
-     * 현재는 웹 API를 만들지 않으므로 spring-boot-starter만 사용한다.
+     * 앞으로 BaseTimeEntity, 공통 Repository,
+     * JPA 감사 기능 등을 sample에서 검증한다.
+     */
+    implementation project(':si-framework-data-jpa')
+
+    /*
+     * Spring Boot 기본 실행 기능을 사용한다.
      */
     implementation 'org.springframework.boot:spring-boot-starter'
 
     /*
-     * Spring Boot 기반 통합 테스트 기능을 제공한다.
+     * sample 실행과 테스트에서 사용할 인메모리 데이터베이스다.
      *
-     * JUnit, AssertJ, Spring Test 등의 테스트 도구를 포함한다.
+     * 운영 프레임워크 라이브러리에 포함되는 DB가 아니라
+     * sample 애플리케이션에서만 사용하는 DB다.
+     */
+    runtimeOnly 'com.h2database:h2'
+
+    /*
+     * sample 모듈의 Spring Boot 통합 테스트를 지원한다.
      */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -97,6 +97,14 @@ rootProject.name = 'si-framework'
 include 'si-framework-core'
 
 /*
+ * JPA 기반 데이터 공통 기능을 제공하는 라이브러리 모듈이다.
+ *
+ * 공통 엔티티, JPA 감사 기능, Repository 지원,
+ * 검색 조건 등의 기능을 담당한다.
+ */
+include 'si-framework-data-jpa'
+
+/*
  * si-framework-sample 디렉터리를 Gradle 하위 모듈로 등록한다.
  *
  * 공통 프레임워크를 실제 Spring Boot 애플리케이션에서

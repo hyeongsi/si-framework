@@ -1,5 +1,42 @@
 spring:
   application:
-    # Spring Boot 애플리케이션 이름이다.
-    # 로그, 모니터링, 설정 관리 등에서 애플리케이션을 식별할 때 사용한다.
+    # 애플리케이션을 로그와 모니터링에서 식별하는 이름이다.
     name: si-framework-sample
+
+  datasource:
+    # sample 애플리케이션에서 사용할 H2 인메모리 데이터베이스 주소다.
+    #
+    # DB_CLOSE_DELAY=-1:
+    # JVM이 종료될 때까지 인메모리 데이터베이스를 유지한다.
+    url: jdbc:h2:mem:siframework;DB_CLOSE_DELAY=-1
+
+    # H2 JDBC 드라이버 클래스다.
+    driver-class-name: org.h2.Driver
+
+    # H2 기본 사용자명이다.
+    username: sa
+
+    # 학습용 인메모리 DB이므로 비밀번호를 비워둔다.
+    password:
+
+  jpa:
+    # 아직 실제 엔티티가 없지만,
+    # 이후 sample 엔티티를 기준으로 스키마를 생성하고 제거한다.
+    hibernate:
+      ddl-auto: create-drop
+
+    # SQL 로그를 기본적으로 출력하지 않는다.
+    # 필요할 때 true로 변경해 쿼리를 확인할 수 있다.
+    show-sql: true
+
+    properties:
+      hibernate:
+        # SQL 출력이 활성화되었을 때 보기 좋게 정렬한다.
+        format_sql: true
+
+    # 웹 요청이 종료될 때까지 영속성 컨텍스트를 유지하는
+    # Open EntityManager in View 기능을 비활성화한다.
+    #
+    # 서비스와 트랜잭션 경계를 명확하게 관리하기 위한 설정이다.
+    # Open EntityManager in View가 활성화되면 Controller나 View 계층에서도 지연 로딩이 동작할 수 있습니다.
+    open-in-view: false
