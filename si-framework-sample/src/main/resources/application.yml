@@ -1,0 +1,5 @@
+spring:
+  application:
+    # Spring Boot 애플리케이션 이름이다.
+    # 로그, 모니터링, 설정 관리 등에서 애플리케이션을 식별할 때 사용한다.
+    name: si-framework-sample

@@ -7,6 +7,23 @@
  */
 
 /*
+ * 하위 모듈에서 사용할 Gradle 플러그인과 버전을
+ * 루트 프로젝트에서 중앙 관리한다.
+ */
+plugins {
+
+    /*
+     * Spring Boot 애플리케이션을 실행하고
+     * 실행 가능한 JAR을 만들기 위한 플러그인이다.
+     *
+     * apply false이므로 루트 프로젝트에는 실제 적용하지 않는다.
+     * 필요한 하위 모듈에서만 플러그인을 적용한다.
+     */
+    id 'org.springframework.boot' version '4.1.0' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+/*
  * 모든 프로젝트에 공통으로 적용할 기본 정보를 설정한다.
  *
  * 여기서 말하는 모든 프로젝트는:

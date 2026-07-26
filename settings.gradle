@@ -95,3 +95,11 @@ rootProject.name = 'si-framework'
  * settings.gradle에 include 해야 Gradle이 하위 프로젝트로 인식한다.
  */
 include 'si-framework-core'
+
+/*
+ * si-framework-sample 디렉터리를 Gradle 하위 모듈로 등록한다.
+ *
+ * 공통 프레임워크를 실제 Spring Boot 애플리케이션에서
+ * 사용하는 방법을 검증하고 보여주는 실행용 예제 모듈이다.
+ */
+include 'si-framework-sample'
