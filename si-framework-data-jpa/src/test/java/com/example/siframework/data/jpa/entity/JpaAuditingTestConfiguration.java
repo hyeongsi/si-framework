@@ -1,7 +1,9 @@
 package com.example.siframework.data.jpa.entity;
 
+import com.example.siframework.core.context.CurrentAuditorProvider;
 import com.example.siframework.data.jpa.auditing.EnableSiFrameworkJpaAuditing;
 import com.example.siframework.data.jpa.auditing.JpaAuditingDateTimeProvider;
+import com.example.siframework.data.jpa.config.JpaAuditingAuditorAutoConfiguration;
 import com.example.siframework.data.jpa.config.JpaAuditingTimeAutoConfiguration;
 import com.example.siframework.data.jpa.support.AdjustableClock;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -12,15 +14,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Optional;
 
 /**
  * BaseTimeEntity 통합 테스트에서 사용할
  * 최소 Spring Boot 및 JPA 감사 설정이다.
  */
 @EnableSiFrameworkJpaAuditing
-@ImportAutoConfiguration(
-    JpaAuditingTimeAutoConfiguration.class
-)
+@ImportAutoConfiguration({
+    JpaAuditingTimeAutoConfiguration.class,
+    JpaAuditingAuditorAutoConfiguration.class
+})
 @SpringBootApplication
 class JpaAuditingTestConfiguration {
 
@@ -38,5 +42,15 @@ class JpaAuditingTestConfiguration {
             Instant.parse("2026-01-01T01:00:00Z"),
             ZoneId.of("Asia/Seoul")
         );
+    }
+
+    /**
+     * 테스트에서 사용할 고정 감사 사용자를 제공한다.
+     *
+     * @return 테스트 감사 사용자 공급자
+     */
+    @Bean
+    CurrentAuditorProvider currentAuditorProvider() {
+        return () -> Optional.of("test-auditor");
     }
 }
