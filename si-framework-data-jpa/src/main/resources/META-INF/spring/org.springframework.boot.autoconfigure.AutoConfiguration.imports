@@ -1,2 +1,5 @@
 # SI 공통 프레임워크 JPA 감사 시간 자동 설정
 com.example.siframework.data.jpa.config.JpaAuditingTimeAutoConfiguration
+
+# SI 공통 프레임워크 JPA 감사 사용자 자동 설정
+com.example.siframework.data.jpa.config.JpaAuditingAuditorAutoConfiguration
