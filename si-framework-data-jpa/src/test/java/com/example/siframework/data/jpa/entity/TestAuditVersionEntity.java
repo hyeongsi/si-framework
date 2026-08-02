@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "test_audit_version_entity")
-class TestAuditVersionEntity
+public class TestAuditVersionEntity
     extends BaseAuditVersionEntity {
 
     /**
@@ -40,7 +40,7 @@ class TestAuditVersionEntity
      *
      * @param name 테스트 이름
      */
-    TestAuditVersionEntity(String name) {
+    public TestAuditVersionEntity(String name) {
         this.name = name;
     }
 
@@ -49,7 +49,7 @@ class TestAuditVersionEntity
      *
      * @return 엔티티 식별자
      */
-    Long id() {
+    public Long id() {
         return id;
     }
 
@@ -58,7 +58,7 @@ class TestAuditVersionEntity
      *
      * @return 테스트 이름
      */
-    String name() {
+    public String name() {
         return name;
     }
 

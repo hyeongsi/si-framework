@@ -22,7 +22,7 @@ import java.time.ZoneId;
     JpaAuditingAuditorAutoConfiguration.class
 })
 @SpringBootApplication
-class JpaAuditingTestConfiguration {
+public class JpaAuditingTestConfiguration {
 
     /**
      * 테스트에서 현재 시각을 직접 변경할 수 있는 Clock을 등록한다.
