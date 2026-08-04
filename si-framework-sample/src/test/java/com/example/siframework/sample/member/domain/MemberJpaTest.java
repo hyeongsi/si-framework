@@ -1,20 +1,20 @@
 package com.example.siframework.sample.member.domain;
 
+import com.example.siframework.sample.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class MemberJpaTest {
 
     @Autowired
-    private MemberTestRepository repository;
+    private MemberRepository repository;
 
     @Autowired
     private EntityManager entityManager;
@@ -89,6 +89,33 @@ class MemberJpaTest {
         assertEquals(
             "SAMPLE-SYSTEM",
             foundMember.modifiedBy()
+        );
+    }
+
+    @Test
+    void 동일한_로그인_ID의_회원을_중복_저장할_수_없다() {
+        // given
+        repository.save(
+            new Member(
+                "unique-member",
+                "첫 번째 회원"
+            )
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+
+
+        // when & then
+        assertThrows(
+            org.springframework.dao.DataIntegrityViolationException.class,
+            () -> repository.saveAndFlush(
+                new Member(
+                    "unique-member",
+                    "두 번째 회원"
+                )
+            )
         );
     }
 }
